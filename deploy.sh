@@ -2,6 +2,6 @@ set -e
 
 echo "Deploying application..."
 
-git pull origin master
+git pull origin main
 
 echo "Application deployed!"

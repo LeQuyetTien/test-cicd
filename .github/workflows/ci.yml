@@ -12,15 +12,12 @@ jobs:
     name: Deploy to Google Cloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       # Setup gcloud CLI
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
         with:
-          version: "290.0.1"
-          service_account_key: ${{ secrets.GCP_SA_KEY_JSON }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          credentials_json: '${{ secrets.GCP_SA_KEY_JSON }}'
 
       # Deploy
-      - name: run deploy.sh
-        run: cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh
+      - name: 'run deploy.sh'
+        run: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'

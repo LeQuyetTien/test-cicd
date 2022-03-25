@@ -3,18 +3,24 @@ name: CI
 on:
   push:
     branches: [ main ]
-
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  RUN_REGION: asia-east2-a
+  SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
 jobs:
-  build:
-
+  deploy:
+    name: Deploy to Google Cloud
     runs-on: ubuntu-latest
-
     steps:
-    - name: run deploy.sh
-      uses: appleboy/ssh-action@master
-      with: 
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        script: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
+      - uses: actions/checkout@v2
+
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "290.0.1"
+          service_account_key: ${{ secrets.GCP_SA_KEY_JSON }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # Deploy
+      - name: run deploy.sh
+        run: cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh

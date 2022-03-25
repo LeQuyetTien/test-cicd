@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: appleboy/ssh@master
     - name: run deploy.sh
-    - with: 
-      host: ${{ secrets.HOST }}
-      username: ${{ secrets.USERNAME }}
-      password: ${{ secrets.PASSWORD }}
-      port: ${{ secrets.PORT }}
-      script: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
+      uses: appleboy/ssh@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'

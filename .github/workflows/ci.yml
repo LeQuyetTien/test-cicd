@@ -1,38 +1,47 @@
-name: CI 
+name: CI
 
 on:
-  push:
-    branches: [ main ]
-env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  RUN_REGION: asia-east2-a
-  SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+    push:
+        branches: [main]
+# env:
+#   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#   RUN_REGION: asia-east2-a
+#   SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
 jobs:
-  deploy:
-    name: Deploy to Google Cloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+    deploy:
+        name: Deploy to Google Cloud
+        runs-on: ubuntu-latest
+        # env:
+        #   IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+        steps:
+            - uses: actions/checkout@v2
 
-      # Setup gcloud CLI
-      # - id: 'auth'
-      - name: Login
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          # credentials_json: '${{ secrets.GCP_SA_KEY_JSON }}'
+            # Setup gcloud CLI
+            # - id: 'auth'
+            # - name: Login
+            #   uses: google-github-actions/setup-gcloud@v0
+            #   with:
+            #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+            #     service_account_email: ${{ secrets.GCP_EMAIL }}
+            #     service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+            #     # credentials_json: '${{ secrets.GCP_SA_KEY_JSON }}'
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
+            # - name: Checkout repository
+            #   uses: actions/checkout@v2
 
-      - name: 'pwd'
-        run: 'pwd'
+            # - name: 'pwd'
+            #   run: 'pwd'
 
-      - name: 'whoami'
-        run: 'whoami'
+            # - name: 'whoami'
+            #   run: 'whoami'
 
-      # Deploy
-      - name: 'run deploy.sh'
-        run: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
+            # Deploy
+            - name: Sync source code
+              env:
+                  source: "./"
+                  destination: "lequyettien.it@35.241.67.204:/var/www/ezactive.com/public_html/test-cicd/"
+              run: |
+                  echo "${{secrets.DEPLOY_KEY}}" > deploy_key
+                  # chmod 600 ./deploy_key
+                  # 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
+                  # echo "${{secrets.DEPLOY_KEY}}" > deploy_key

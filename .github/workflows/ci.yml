@@ -15,10 +15,17 @@ jobs:
       - uses: actions/checkout@v2
 
       # Setup gcloud CLI
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v0'
+      # - id: 'auth'
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY_JSON }}'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          # credentials_json: '${{ secrets.GCP_SA_KEY_JSON }}'
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: 'pwd'
         run: 'pwd'
@@ -27,5 +34,5 @@ jobs:
         run: 'whoami'
 
       # Deploy
-      # - name: 'run deploy.sh'
-      #   run: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
+      - name: 'run deploy.sh'
+        run: 'cd /var/www/ezactive.com/public_html/test-cicd && sudo sh deploy.sh'
